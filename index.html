@@ -449,7 +449,7 @@ function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 // Pre-load known results
 let results = loadResults();
 function initKnownResults(){
-  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[3,0] };
+  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[4,1] };
   Object.entries(known).forEach(([id,[g1,g2]])=>{
     if(results[id]===undefined) results[id]=[g1,g2];
   });
