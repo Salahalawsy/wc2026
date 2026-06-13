@@ -446,6 +446,13 @@ function loadResults(){
 }
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
+// ── Auto-clear old cache when version changes ──
+const CURRENT_VER = 'wc2026_v6';
+if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
+  Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
+  localStorage.setItem('wc2026_ver', CURRENT_VER);
+}
+
 // Pre-load known results
 let results = loadResults();
 function initKnownResults(){
