@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 FIFA World Cup 2026 — Live Tracker</title>
+<style>
+:root{
+  --dark:#1A3A5C;--gold:#C9A84C;--gold-lt:#FDF3DC;
+  --blue:#0D47A1;--blue2:#1565C0;--green:#2E7D32;
+  --red:#C62828;--bg:#F0F4F8;--card:#fff;
+  --border:#D0DDE8;--text:#1a1a2e;--sub:#546E7A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+
+/* ── GIFT STAMP ── */
+.gift-stamp{
+  background:linear-gradient(135deg,#0a1628 0%,#1A3A5C 40%,#0D47A1 100%);
+  padding:18px 16px 12px;text-align:center;
+  border-bottom:3px solid var(--gold);position:relative;overflow:hidden;
+}
+.gift-stamp::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 20px);
+}
+.stamp-trophy{font-size:2.6rem;display:block;margin-bottom:4px;
+  filter:drop-shadow(0 0 12px rgba(201,168,76,.7));position:relative}
+.stamp-title{
+  font-size:1.45rem;font-weight:900;position:relative;
+  background:linear-gradient(135deg,#FFD700,#C9A84C,#FFD700);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;letter-spacing:1px;margin-bottom:2px;
+}
+.stamp-subtitle{color:rgba(255,255,255,.65);font-size:.8rem;margin-bottom:8px;position:relative}
+.gift-ribbon{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);
+  border-radius:20px;padding:5px 16px;margin-bottom:5px;position:relative;
+}
+.gift-ribbon span{color:var(--gold);font-size:.8rem;font-weight:600}
+.gift-by{font-size:.74rem;color:rgba(255,255,255,.45);letter-spacing:.4px;position:relative}
+.gift-by b{color:var(--gold);font-size:.8rem}
+
+/* ── TIMEZONE BAR ── */
+.tz-bar{
+  background:#1e2d3d;padding:7px 10px;
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;
+  border-bottom:2px solid var(--gold);
+}
+.tz-label{color:rgba(255,255,255,.55);font-size:.73rem;white-space:nowrap}
+.tz-btn{
+  padding:4px 10px;border:1px solid rgba(255,255,255,.2);border-radius:16px;
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.7);
+  font-size:.73rem;cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.tz-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.tz-btn.active{background:var(--gold);color:#1a1a2e;border-color:var(--gold);font-weight:700}
+.tz-now{
+  margin-left:auto;color:#FFD54F;font-size:.75rem;font-weight:600;
+  background:rgba(201,168,76,.12);border-radius:10px;padding:3px 9px;white-space:nowrap;
+}
+
+/* ── TABS ── */
+.hdr{background:linear-gradient(135deg,#0a2647,#1A3A5C 60%,#0D47A1);padding:0}
+.tabs{display:flex;overflow-x:auto;gap:2px;padding:6px 6px 0;background:rgba(0,0,0,.2);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex-shrink:0;padding:8px 12px;font-size:.79rem;font-weight:700;cursor:pointer;
+  border-radius:8px 8px 0 0;border:none;background:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.7);transition:.2s;white-space:nowrap;
+}
+.tab:hover{background:rgba(255,255,255,.2);color:#fff}
+.tab.active{background:#fff;color:var(--blue)}
+.tab.home-tab{background:rgba(201,168,76,.25);color:#FFD54F}
+.tab.home-tab.active{background:#fff;color:var(--dark)}
+
+/* ── PAGES ── */
+.page{display:none;padding:12px;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ── SAVE NOTICE ── */
+.save-notice{
+  background:#E8F5E9;border:1px solid #A5D6A7;border-radius:8px;
+  padding:8px 14px;margin-bottom:10px;font-size:.78rem;color:#2E7D32;
+  display:flex;align-items:center;gap:8px;
+}
+.save-notice b{font-size:.82rem}
+
+/* ── DAY BLOCK ── */
+.day-block{margin-bottom:12px}
+.day-label{
+  background:linear-gradient(90deg,#263238,#37474F);color:#FFD54F;
+  border-radius:8px 8px 0 0;padding:7px 14px;font-weight:700;font-size:.86rem;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.day-count{background:var(--gold);color:#1a1a2e;border-radius:10px;padding:1px 8px;font-size:.7rem}
+.matches-list{background:#fff;border-radius:0 0 8px 8px;border:1px solid var(--border);border-top:none;overflow:hidden}
+
+/* ── MATCH ROW ── */
+.match-row{
+  display:grid;grid-template-columns:1fr 160px 1fr;
+  align-items:center;padding:7px 8px;border-bottom:1px solid #ECEFF1;
+  transition:background .15s;
+}
+.match-row:last-child{border-bottom:none}
+.match-row:hover{background:#F8FAFF}
+.match-row.done{background:#E8F5E9}
+.match-row.live-now{background:#FFFDE7;animation:pulse 1.8s infinite}
+.match-row.van{background:#E0F7FA!important}
+.match-row.iraq{background:#FFF3E0!important}
+.match-row.canada{background:#FCE4EC!important}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+
+.team1{text-align:left;font-weight:700;font-size:.84rem;padding-left:2px}
+.team2{text-align:right;font-weight:700;font-size:.84rem;padding-right:2px}
+
+/* ── SCORE INPUT CENTER ── */
+.score-center{display:flex;flex-direction:column;align-items:center;gap:4px}
+.score-inputs{display:flex;align-items:center;gap:5px}
+.score-in{
+  width:38px;height:32px;text-align:center;font-size:1.05rem;font-weight:800;
+  color:var(--blue);border:2px solid #90CAF9;border-radius:8px;
+  background:#EEF6FF;outline:none;-moz-appearance:textfield;
+  transition:border-color .2s,background .2s;
+}
+.score-in:focus{border-color:var(--gold);background:#FFFDE7}
+.score-in::-webkit-inner-spin-button,.score-in::-webkit-outer-spin-button{-webkit-appearance:none}
+.score-sep{font-size:1.1rem;font-weight:800;color:#90A4AE}
+.score-result{font-size:1.1rem;font-weight:800;color:var(--blue);letter-spacing:1px}
+
+/* ── MATCH META ── */
+.match-meta{
+  grid-column:1/-1;display:flex;gap:5px;flex-wrap:wrap;
+  align-items:center;padding:3px 2px 0;font-size:.68rem;color:var(--sub);
+}
+
+/* ── COUNTDOWN ── */
+.cd-badge{
+  display:inline-flex;align-items:center;border-radius:10px;
+  padding:2px 8px;font-size:.7rem;font-weight:700;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.cd-soon{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.cd-verysoon{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80;animation:pcd 1s infinite}
+.cd-live{background:#FFEB3B;color:#B71C1C;border:1px solid #F9A825;animation:pcd .8s infinite}
+.cd-done{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+@keyframes pcd{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;border-radius:10px;padding:1px 6px;font-size:.66rem;font-weight:700}
+.b-van{background:#B2EBF2;color:#00696F}
+.b-iraq{background:#FFE0B2;color:#BF360C}
+.b-canada{background:#FCE4EC;color:#880E4F}
+.grp-b{background:var(--gold-lt);color:var(--dark);border:1px solid var(--gold);cursor:pointer}
+.grp-b:hover{background:var(--gold);color:#fff}
+
+/* ── SEC HEADER ── */
+.sec-hdr{
+  background:linear-gradient(90deg,var(--dark),var(--blue2));color:#fff;
+  border-radius:10px;padding:10px 16px;margin-bottom:12px;
+  font-size:.95rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+
+/* ── GROUP PAGE ── */
+.grp-page-title{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;
+  border-radius:10px;padding:12px 16px;margin-bottom:12px;text-align:center;
+}
+.grp-page-title h2{font-size:1.1rem;margin-bottom:2px}
+.grp-page-title p{font-size:.77rem;opacity:.8}
+
+/* ── STANDINGS TABLE ── */
+.std-wrap{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:12px}
+.std-title{background:#263238;color:#FFD54F;padding:8px 14px;font-weight:700;font-size:.86rem}
+table.std{width:100%;border-collapse:collapse}
+table.std th{background:#37474F;color:#fff;padding:7px 4px;font-size:.74rem;text-align:center}
+table.std td{padding:6px 4px;border-bottom:1px solid #ECEFF1;font-size:.82rem;text-align:center;vertical-align:middle;transition:background .3s}
+table.std td.tname{text-align:left;font-weight:700;padding-left:8px;font-size:.83rem}
+.r1{background:linear-gradient(90deg,#FFFDE7,#FFF9C4)}
+.r2{background:linear-gradient(90deg,#F5F5F5,#EEEEEE)}
+.r3{background:linear-gradient(90deg,#FBE9E7,#FFF3E0)}
+.r4{background:#FAFAFA}
+.pts{font-weight:800;color:var(--blue);font-size:.95rem}
+.gd-pos{color:#1565C0;font-weight:700}
+.gd-neg{color:#C62828;font-weight:700}
+.q-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle}
+.qa{background:#1565C0}.qm{background:#43A047}
+
+/* ── GROUP MATCHES (in group tab) ── */
+.grp-matches-wrap{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:12px}
+.grp-matches-title{background:#455A64;color:#fff;padding:8px 14px;font-weight:700;font-size:.86rem}
+.gm-row{
+  display:grid;grid-template-columns:1fr 140px 1fr;
+  align-items:center;padding:7px 10px;border-bottom:1px solid #ECEFF1;
+}
+.gm-row:last-child{border-bottom:none}
+.gm-row.done{background:#E8F5E9}
+.gm-row.live-now{background:#FFFDE7;animation:pulse 1.8s infinite}
+.gm-row.van{background:#E0F7FA!important}
+.gm-row.iraq{background:#FFF3E0!important}
+.gm-row.canada{background:#FCE4EC!important}
+.gm-t1{font-weight:600;font-size:.82rem;text-align:left}
+.gm-t2{font-weight:600;font-size:.82rem;text-align:right}
+.gm-center{display:flex;flex-direction:column;align-items:center;gap:3px}
+.gm-sc{font-weight:800;font-size:1rem;color:var(--blue);text-align:center}
+.gm-sc-ns{color:#90A4AE;font-size:.78rem;text-align:center}
+.gm-meta{grid-column:1/-1;font-size:.67rem;color:#78909C;padding-top:2px;text-align:center}
+
+/* ── TIEBREAK ── */
+.tbreak{
+  background:#FFF8E1;border-radius:10px;border-left:4px solid var(--gold);
+  padding:10px 14px;font-size:.75rem;color:#5D4037;line-height:1.9;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:12px;
+}
+.tbreak b{color:var(--blue)}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:6px 10px 10px;justify-content:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.73rem}
+.leg-sq{width:12px;height:12px;border-radius:3px}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:18px 16px;
+  background:linear-gradient(135deg,#0a1628,#1A3A5C);
+  color:rgba(255,255,255,.45);font-size:.74rem;
+  border-top:2px solid var(--gold);margin-top:16px;
+}
+footer .ft-name{color:var(--gold);font-size:.82rem;font-weight:600;display:block;margin-bottom:3px}
+
+/* MOBILE */
+@media(max-width:480px){
+  .stamp-title{font-size:1.15rem}
+  .tab{padding:6px 9px;font-size:.72rem}
+  .match-row{grid-template-columns:1fr 140px 1fr;padding:6px 5px}
+  .team1,.team2{font-size:.76rem}
+  .score-in{width:33px;height:28px;font-size:.95rem}
+  .tz-btn{padding:3px 7px;font-size:.68rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ GIFT STAMP ══ -->
+<div class="gift-stamp">
+  <span class="stamp-trophy">🏆</span>
+  <div class="stamp-title">FIFA WORLD CUP 2026</div>
+  <div class="stamp-subtitle">Live Tracker · Group Tables · Countdown · 5 Timezones · Auto-Scoring</div>
+  <div class="gift-ribbon"><span>🎁 &nbsp;A Special Gift From</span></div><br>
+  <div class="gift-by">Prepared &amp; Designed by &nbsp;<b>Salah ALAWSY</b> &nbsp;🇮🇶 · Vancouver, BC Canada</div>
+</div>
+
+<!-- ══ TIMEZONE BAR ══ -->
+<div class="tz-bar">
+  <span class="tz-label">🌍 Timezone:</span>
+  <button class="tz-btn active" onclick="setTZ('vancouver')" id="btn-vancouver">🇨🇦 Vancouver</button>
+  <button class="tz-btn" onclick="setTZ('baghdad')"  id="btn-baghdad">🇮🇶 Baghdad</button>
+  <button class="tz-btn" onclick="setTZ('jordan')"   id="btn-jordan">🇯🇴 Jordan</button>
+  <button class="tz-btn" onclick="setTZ('uae')"      id="btn-uae">🇦🇪 UAE</button>
+  <button class="tz-btn" onclick="setTZ('wales')"    id="btn-wales">🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales</button>
+  <span class="tz-now" id="tzNow">🕐 Vancouver (PT)</span>
+</div>
+
+<!-- ══ TABS ══ -->
+<div class="hdr">
+  <div class="tabs">
+    <button class="tab home-tab active" onclick="showPage('home',this)">🏠 Schedule</button>
+    <button class="tab" onclick="showPage('A',this)">A</button>
+    <button class="tab" onclick="showPage('B',this)">B 🍁</button>
+    <button class="tab" onclick="showPage('C',this)">C</button>
+    <button class="tab" onclick="showPage('D',this)">D</button>
+    <button class="tab" onclick="showPage('E',this)">E</button>
+    <button class="tab" onclick="showPage('F',this)">F</button>
+    <button class="tab" onclick="showPage('G',this)">G</button>
+    <button class="tab" onclick="showPage('H',this)">H</button>
+    <button class="tab" onclick="showPage('I',this)">I 🇮🇶</button>
+    <button class="tab" onclick="showPage('J',this)">J</button>
+    <button class="tab" onclick="showPage('K',this)">K</button>
+    <button class="tab" onclick="showPage('L',this)">L</button>
+  </div>
+</div>
+
+<!-- ══ PAGE CONTAINERS ══ -->
+<div id="page-home" class="page active"></div>
+<div id="page-A"  class="page"></div><div id="page-B"  class="page"></div>
+<div id="page-C"  class="page"></div><div id="page-D"  class="page"></div>
+<div id="page-E"  class="page"></div><div id="page-F"  class="page"></div>
+<div id="page-G"  class="page"></div><div id="page-H"  class="page"></div>
+<div id="page-I"  class="page"></div><div id="page-J"  class="page"></div>
+<div id="page-K"  class="page"></div><div id="page-L"  class="page"></div>
+
+<footer>
+  <span class="ft-name">🎁 A Gift for Friends &amp; Family — Prepared by Salah ALAWSY · Vancouver BC 🇮🇶🇨🇦</span>
+  ⚽ FIFA World Cup 2026 | June 11 – July 19, 2026 | USA · Canada · Mexico<br>
+  Enter scores → standings update instantly · Results saved in your browser automatically
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════════
+// TIMEZONE CONFIG
+// ════════════════════════════════════════════════════════
+const TZ = {
+  vancouver:{ off:-7, label:'🇨🇦 Vancouver (PT)',  abbr:'PT'  },
+  baghdad:  { off: 3, label:'🇮🇶 Baghdad (AST)',   abbr:'BGH' },
+  jordan:   { off: 3, label:'🇯🇴 Jordan (EEST)',   abbr:'AMM' },
+  uae:      { off: 4, label:'🇦🇪 UAE (GST)',       abbr:'DXB' },
+  wales:    { off: 1, label:'🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales (BST)',   abbr:'BST' },
+};
+let curTZ = 'vancouver', curPage = 'home';
+
+function setTZ(tz){
+  curTZ = tz;
+  document.querySelectorAll('.tz-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-'+tz).classList.add('active');
+  document.getElementById('tzNow').textContent = '🕐 '+TZ[tz].label;
+  renderCurrent();
+}
+
+// ════════════════════════════════════════════════════════
+// GROUPS & MATCHES
+// ════════════════════════════════════════════════════════
+const GROUPS = {
+  A:["Mexico","South Korea","Czechia","South Africa"],
+  B:["Canada","Switzerland","Qatar","Bosnia & Herz."],
+  C:["Brazil","Morocco","Haiti","Scotland"],
+  D:["USA","Australia","Türkiye","Paraguay"],
+  E:["Germany","Ecuador","Ivory Coast","Curaçao"],
+  F:["Netherlands","Japan","Sweden","Tunisia"],
+  G:["Belgium","Iran","New Zealand","Egypt"],
+  H:["Spain","Saudi Arabia","Uruguay","Cape Verde"],
+  I:["France","Senegal","Iraq","Norway"],
+  J:["Argentina","Algeria","Austria","Jordan"],
+  K:["Portugal","Colombia","Uzbekistan","DR Congo"],
+  L:["England","Croatia","Ghana","Panama"]
+};
+
+// Convert PT kickoff to UTC ms
+function pt(date,h,m=0){
+  const d=new Date(date+'T00:00:00Z');
+  d.setUTCHours(h+7,m,0,0); return d.getTime();
+}
+
+// Match schema: {id, grp, t1i, t2i, ko(UTC ms), venue, city, note}
+const MATCHES = [
+  // ── Jun 11 ──
+  {id:'A0',grp:'A',t1i:0,t2i:3,ko:pt('2026-06-11',12),  venue:'Estadio Azteca',     city:'Mexico City',  note:'Opening Match'},
+  {id:'A1',grp:'A',t1i:1,t2i:2,ko:pt('2026-06-11',19),  venue:'Estadio Akron',      city:'Zapopan',      note:''},
+  // ── Jun 12 ──
+  {id:'B0',grp:'B',t1i:0,t2i:3,ko:pt('2026-06-12',12),  venue:'BMO Field',          city:'Toronto',      note:'canada'},
+  {id:'D0',grp:'D',t1i:0,t2i:3,ko:pt('2026-06-12',18),  venue:'SoFi Stadium',       city:'Inglewood',    note:''},
+  // ── Jun 13 ──
+  {id:'B1',grp:'B',t1i:2,t2i:1,ko:pt('2026-06-13',12),  venue:"Levi's Stadium",     city:'Santa Clara',  note:''},
+  {id:'C0',grp:'C',t1i:0,t2i:1,ko:pt('2026-06-13',15),  venue:'MetLife Stadium',    city:'New Jersey',   note:''},
+  {id:'C1',grp:'C',t1i:2,t2i:3,ko:pt('2026-06-13',18),  venue:'Gillette Stadium',   city:'Foxborough',   note:''},
+  {id:'D1',grp:'D',t1i:1,t2i:2,ko:pt('2026-06-13',21),  venue:'BC Place',           city:'Vancouver',    note:'van'},
+  // ── Jun 14 ──
+  {id:'E0',grp:'E',t1i:0,t2i:3,ko:pt('2026-06-14',10),  venue:'NRG Stadium',        city:'Houston',      note:''},
+  {id:'F0',grp:'F',t1i:0,t2i:1,ko:pt('2026-06-14',13),  venue:'AT&T Stadium',       city:'Arlington',    note:''},
+  {id:'E1',grp:'E',t1i:1,t2i:2,ko:pt('2026-06-14',16),  venue:'Lincoln Financial',  city:'Philadelphia', note:''},
+  {id:'F1',grp:'F',t1i:2,t2i:3,ko:pt('2026-06-14',19),  venue:'Estadio BBVA',       city:'Monterrey',    note:''},
+  // ── Jun 15 ──
+  {id:'H0',grp:'H',t1i:0,t2i:3,ko:pt('2026-06-15',9),   venue:'Mercedes-Benz Stad.',city:'Atlanta',      note:''},
+  {id:'G0',grp:'G',t1i:0,t2i:1,ko:pt('2026-06-15',12),  venue:'Lumen Field',        city:'Seattle',      note:''},
+  {id:'H1',grp:'H',t1i:1,t2i:2,ko:pt('2026-06-15',15),  venue:'Hard Rock Stadium',  city:'Miami',        note:''},
+  {id:'G1',grp:'G',t1i:2,t2i:3,ko:pt('2026-06-15',18),  venue:'SoFi Stadium',       city:'Inglewood',    note:''},
+  // ── Jun 16 ──
+  {id:'I0',grp:'I',t1i:0,t2i:1,ko:pt('2026-06-16',12),  venue:'MetLife Stadium',    city:'New Jersey',   note:''},
+  {id:'I1',grp:'I',t1i:2,t2i:3,ko:pt('2026-06-16',15),  venue:'Gillette Stadium',   city:'Foxborough',   note:'iraq'},
+  {id:'J0',grp:'J',t1i:0,t2i:1,ko:pt('2026-06-16',18),  venue:'Arrowhead Stadium',  city:'Kansas City',  note:''},
+  {id:'J1',grp:'J',t1i:2,t2i:3,ko:pt('2026-06-16',21),  venue:"Levi's Stadium",     city:'Santa Clara',  note:''},
+  // ── Jun 17 ──
+  {id:'K0',grp:'K',t1i:0,t2i:3,ko:pt('2026-06-17',10),  venue:'NRG Stadium',        city:'Houston',      note:''},
+  {id:'L0',grp:'L',t1i:0,t2i:1,ko:pt('2026-06-17',13),  venue:'AT&T Stadium',       city:'Arlington',    note:''},
+  {id:'L1',grp:'L',t1i:2,t2i:3,ko:pt('2026-06-17',16),  venue:'BMO Field',          city:'Toronto',      note:'canada'},
+  {id:'K1',grp:'K',t1i:1,t2i:2,ko:pt('2026-06-17',19),  venue:'Estadio Azteca',     city:'Mexico City',  note:''},
+  // ── Jun 18 ──
+  {id:'A2',grp:'A',t1i:2,t2i:3,ko:pt('2026-06-18',9),   venue:'Mercedes-Benz Stad.',city:'Atlanta',      note:''},
+  {id:'B2',grp:'B',t1i:1,t2i:3,ko:pt('2026-06-18',12),  venue:'SoFi Stadium',       city:'Inglewood',    note:''},
+  {id:'B3',grp:'B',t1i:0,t2i:2,ko:pt('2026-06-18',15),  venue:'BC Place',           city:'Vancouver',    note:'van canada'},
+  {id:'A3',grp:'A',t1i:0,t2i:1,ko:pt('2026-06-18',18),  venue:'Estadio Akron',      city:'Zapopan',      note:''},
+  // ── Jun 19 ──
+  {id:'D2',grp:'D',t1i:0,t2i:1,ko:pt('2026-06-19',12),  venue:'Lumen Field',        city:'Seattle',      note:''},
+  {id:'C2',grp:'C',t1i:3,t2i:1,ko:pt('2026-06-19',15),  venue:'Gillette Stadium',   city:'Foxborough',   note:''},
+  {id:'C3',grp:'C',t1i:0,t2i:2,ko:pt('2026-06-19',17,30),venue:'Lincoln Financial', city:'Philadelphia', note:''},
+  {id:'D3',grp:'D',t1i:3,t2i:2,ko:pt('2026-06-19',20),  venue:"Levi's Stadium",     city:'Santa Clara',  note:''},
+  // ── Jun 20 ──
+  {id:'F2',grp:'F',t1i:0,t2i:2,ko:pt('2026-06-20',10),  venue:'NRG Stadium',        city:'Houston',      note:''},
+  {id:'E2',grp:'E',t1i:0,t2i:2,ko:pt('2026-06-20',13),  venue:'BMO Field',          city:'Toronto',      note:'canada'},
+  {id:'E3',grp:'E',t1i:1,t2i:3,ko:pt('2026-06-20',17),  venue:'Arrowhead Stadium',  city:'Kansas City',  note:''},
+  {id:'F3',grp:'F',t1i:3,t2i:1,ko:pt('2026-06-20',21),  venue:'Estadio BBVA',       city:'Monterrey',    note:'Match #1000'},
+  // ── Jun 21 ──
+  {id:'H2',grp:'H',t1i:0,t2i:1,ko:pt('2026-06-21',9),   venue:'Mercedes-Benz Stad.',city:'Atlanta',      note:''},
+  {id:'G2',grp:'G',t1i:0,t2i:1,ko:pt('2026-06-21',12),  venue:'SoFi Stadium',       city:'Inglewood',    note:''},
+  {id:'H3',grp:'H',t1i:2,t2i:3,ko:pt('2026-06-21',15),  venue:'Hard Rock Stadium',  city:'Miami',        note:''},
+  {id:'G3',grp:'G',t1i:3,t2i:2,ko:pt('2026-06-21',18),  venue:'BC Place',           city:'Vancouver',    note:'van'},
+  // ── Jun 22 ──
+  {id:'J2',grp:'J',t1i:0,t2i:2,ko:pt('2026-06-22',10),  venue:'AT&T Stadium',       city:'Arlington',    note:''},
+  {id:'I2',grp:'I',t1i:0,t2i:2,ko:pt('2026-06-22',14),  venue:'Lincoln Financial',  city:'Philadelphia', note:'iraq'},
+  {id:'I3',grp:'I',t1i:3,t2i:1,ko:pt('2026-06-22',17),  venue:'MetLife Stadium',    city:'New Jersey',   note:''},
+  {id:'J3',grp:'J',t1i:1,t2i:3,ko:pt('2026-06-22',20),  venue:"Levi's Stadium",     city:'Santa Clara',  note:''},
+  // ── Jun 23 ──
+  {id:'K2',grp:'K',t1i:0,t2i:1,ko:pt('2026-06-23',10),  venue:'NRG Stadium',        city:'Houston',      note:''},
+  {id:'L2',grp:'L',t1i:0,t2i:2,ko:pt('2026-06-23',13),  venue:'Gillette Stadium',   city:'Foxborough',   note:''},
+  {id:'L3',grp:'L',t1i:3,t2i:1,ko:pt('2026-06-23',16),  venue:'BMO Field',          city:'Toronto',      note:'canada'},
+  {id:'K3',grp:'K',t1i:2,t2i:3,ko:pt('2026-06-23',19),  venue:'Estadio Akron',      city:'Zapopan',      note:''},
+  // ── Jun 24 ──
+  {id:'B4',grp:'B',t1i:1,t2i:0,ko:pt('2026-06-24',12),  venue:'BC Place',           city:'Vancouver',    note:'van canada Final Day'},
+  {id:'B5',grp:'B',t1i:3,t2i:2,ko:pt('2026-06-24',12),  venue:'Lumen Field',        city:'Seattle',      note:'Final Day'},
+  {id:'C4',grp:'C',t1i:3,t2i:0,ko:pt('2026-06-24',15),  venue:'Hard Rock Stadium',  city:'Miami',        note:'Final Day'},
+  {id:'C5',grp:'C',t1i:1,t2i:2,ko:pt('2026-06-24',15),  venue:'Mercedes-Benz Stad.',city:'Atlanta',      note:'Final Day'},
+  {id:'A4',grp:'A',t1i:2,t2i:0,ko:pt('2026-06-24',18),  venue:'Estadio Azteca',     city:'Mexico City',  note:'Final Day'},
+  {id:'A5',grp:'A',t1i:3,t2i:1,ko:pt('2026-06-24',18),  venue:'Estadio BBVA',       city:'Monterrey',    note:'Final Day'},
+  // ── Jun 25 ──
+  {id:'E4',grp:'E',t1i:3,t2i:2,ko:pt('2026-06-25',13),  venue:'Lincoln Financial',  city:'Philadelphia', note:'Final Day'},
+  {id:'E5',grp:'E',t1i:1,t2i:0,ko:pt('2026-06-25',13),  venue:'MetLife Stadium',    city:'New Jersey',   note:'Final Day'},
+  {id:'F4',grp:'F',t1i:1,t2i:2,ko:pt('2026-06-25',16),  venue:'AT&T Stadium',       city:'Arlington',    note:'Final Day'},
+  {id:'F5',grp:'F',t1i:3,t2i:0,ko:pt('2026-06-25',16),  venue:'Arrowhead Stadium',  city:'Kansas City',  note:'Final Day'},
+  {id:'D4',grp:'D',t1i:2,t2i:0,ko:pt('2026-06-25',19),  venue:'SoFi Stadium',       city:'Inglewood',    note:'Final Day'},
+  {id:'D5',grp:'D',t1i:3,t2i:1,ko:pt('2026-06-25',19),  venue:"Levi's Stadium",     city:'Santa Clara',  note:'Final Day'},
+  // ── Jun 26 ──
+  {id:'I4',grp:'I',t1i:3,t2i:0,ko:pt('2026-06-26',12),  venue:'Gillette Stadium',   city:'Foxborough',   note:'Final Day'},
+  {id:'I5',grp:'I',t1i:1,t2i:2,ko:pt('2026-06-26',12),  venue:'BMO Field',          city:'Toronto',      note:'iraq canada Final Day'},
+  {id:'H4',grp:'H',t1i:3,t2i:1,ko:pt('2026-06-26',17),  venue:'NRG Stadium',        city:'Houston',      note:'Final Day'},
+  {id:'H5',grp:'H',t1i:2,t2i:0,ko:pt('2026-06-26',17),  venue:'Estadio Akron',      city:'Zapopan',      note:'Final Day'},
+  {id:'G4',grp:'G',t1i:3,t2i:1,ko:pt('2026-06-26',20),  venue:'Lumen Field',        city:'Seattle',      note:'Final Day'},
+  {id:'G5',grp:'G',t1i:2,t2i:0,ko:pt('2026-06-26',20),  venue:'BC Place',           city:'Vancouver',    note:'van Final Day'},
+  // ── Jun 27 ──
+  {id:'L4',grp:'L',t1i:3,t2i:0,ko:pt('2026-06-27',14),  venue:'MetLife Stadium',    city:'New Jersey',   note:'Final Day'},
+  {id:'L5',grp:'L',t1i:1,t2i:2,ko:pt('2026-06-27',14),  venue:'Lincoln Financial',  city:'Philadelphia', note:'Final Day'},
+  {id:'K4',grp:'K',t1i:1,t2i:0,ko:pt('2026-06-27',16,30),venue:'Hard Rock Stadium', city:'Miami',        note:'Final Day'},
+  {id:'K5',grp:'K',t1i:3,t2i:2,ko:pt('2026-06-27',16,30),venue:'Mercedes-Benz Stad.',city:'Atlanta',     note:'Final Day'},
+  {id:'J4',grp:'J',t1i:1,t2i:2,ko:pt('2026-06-27',19),  venue:'Arrowhead Stadium',  city:'Kansas City',  note:'Final Day'},
+  {id:'J5',grp:'J',t1i:3,t2i:0,ko:pt('2026-06-27',19),  venue:'AT&T Stadium',       city:'Arlington',    note:'Final Day'},
+];
+
+// ════════════════════════════════════════════════════════
+// RESULTS STORE — localStorage backed
+// ════════════════════════════════════════════════════════
+const STORE_KEY = 'wc2026_results_v2';
+
+function loadResults(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'{}'); }
+  catch(e){ return {}; }
+}
+function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
+
+// Pre-load known results
+let results = loadResults();
+function initKnownResults(){
+  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[3,0] };
+  Object.entries(known).forEach(([id,[g1,g2]])=>{
+    if(results[id]===undefined) results[id]=[g1,g2];
+  });
+  saveResults(results);
+}
+initKnownResults();
+
+// ════════════════════════════════════════════════════════
+// SCORE INPUT HANDLER
+// ════════════════════════════════════════════════════════
+function onScore(id){
+  const v1 = document.getElementById('s1_'+id).value;
+  const v2 = document.getElementById('s2_'+id).value;
+  if(v1!=='' && v2!==''){
+    results[id] = [parseInt(v1), parseInt(v2)];
+    saveResults(results);
+    // Refresh standings in group tab if open
+    const m = MATCHES.find(x=>x.id===id);
+    if(m && curPage===m.grp) renderGroupPage(m.grp);
+    // Flash row
+    const row = document.getElementById('row_'+id);
+    if(row){ row.classList.add('done'); }
+  } else {
+    delete results[id];
+    saveResults(results);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// TIMEZONE HELPERS
+// ════════════════════════════════════════════════════════
+function localTime(koMs){
+  const off=TZ[curTZ].off;
+  const d=new Date(koMs+off*3600000);
+  const h=d.getUTCHours(),m=d.getUTCMinutes();
+  const ap=h>=12?'PM':'AM', h12=h%12||12;
+  return `${h12}:${String(m).padStart(2,'0')} ${ap}`;
+}
+function localDate(koMs){
+  const off=TZ[curTZ].off;
+  const d=new Date(koMs+off*3600000);
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[d.getUTCDay()]} ${d.getUTCDate()} ${months[d.getUTCMonth()]}`;
+}
+function dateKey(koMs){
+  const off=TZ[curTZ].off;
+  const d=new Date(koMs+off*3600000);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+}
+
+// ════════════════════════════════════════════════════════
+// STANDINGS ENGINE (Article 13)
+// ════════════════════════════════════════════════════════
+function standings(grp){
+  const teams=GROUPS[grp], n=teams.length;
+  const s=Array.from({length:n},(_,i)=>({
+    idx:i,W:0,D:0,L:0,GF:0,GA:0,pts:0,played:0,
+    hp:Array(n).fill(0),hgf:Array(n).fill(0),hga:Array(n).fill(0)
+  }));
+  MATCHES.filter(m=>m.grp===grp&&results[m.id]).forEach(m=>{
+    const[g1,g2]=results[m.id],[a,b]=[m.t1i,m.t2i];
+    s[a].played++;s[b].played++;
+    s[a].GF+=g1;s[a].GA+=g2;s[b].GF+=g2;s[b].GA+=g1;
+    s[a].hgf[b]+=g1;s[a].hga[b]+=g2;s[b].hgf[a]+=g2;s[b].hga[a]+=g1;
+    if(g1>g2){s[a].W++;s[b].L++;s[a].pts+=3;s[a].hp[b]+=3;}
+    else if(g1===g2){s[a].D++;s[b].D++;s[a].pts++;s[b].pts++;s[a].hp[b]++;s[b].hp[a]++;}
+    else{s[b].W++;s[a].L++;s[b].pts+=3;s[b].hp[a]+=3;}
+  });
+  return s.slice().sort((a,b)=>{
+    if(b.pts!==a.pts)return b.pts-a.pts;
+    const hd=a.hp[b.idx]-b.hp[a.idx];if(hd)return -hd;
+    const hgd=(a.hgf[b.idx]-a.hga[b.idx])-(b.hgf[a.idx]-b.hga[a.idx]);if(hgd)return -hgd;
+    const hgf=a.hgf[b.idx]-b.hgf[a.idx];if(hgf)return -hgf;
+    const gd=(b.GF-b.GA)-(a.GF-a.GA);if(gd)return gd;
+    return b.GF-a.GF;
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// COUNTDOWN
+// ════════════════════════════════════════════════════════
+function fmtCD(ms){
+  if(ms<=0)return null;
+  const s=Math.floor(ms/1000),sec=s%60,min=Math.floor(s/60)%60;
+  const hr=Math.floor(s/3600)%24,day=Math.floor(s/86400);
+  if(day>0)return `${day}d ${hr}h ${min}m`;
+  if(hr>0) return `${hr}h ${min}m ${sec}s`;
+  return `${min}m ${sec}s`;
+}
+function tickCDs(){
+  const now=Date.now();
+  document.querySelectorAll('[data-ko]').forEach(el=>{
+    const ko=parseInt(el.dataset.ko),diff=ko-now,end=ko+115*60000;
+    if(results[el.dataset.mid]){el.textContent='✅ Done';el.className='cd-badge cd-done';return;}
+    if(diff>0){
+      el.textContent='⏱ '+fmtCD(diff);
+      el.className='cd-badge '+(diff<3600000?'cd-verysoon':'cd-soon');
+    } else if(now<end){
+      el.textContent='🔴 LIVE NOW';el.className='cd-badge cd-live';
+    } else {
+      el.textContent='✅ Done';el.className='cd-badge cd-done';
+    }
+  });
+}
+setInterval(tickCDs,1000);
+
+// ════════════════════════════════════════════════════════
+// RENDER HOME
+// ════════════════════════════════════════════════════════
+function renderHome(){
+  const byDay={};
+  MATCHES.forEach(m=>{
+    const k=dateKey(m.ko),lbl=localDate(m.ko);
+    if(!byDay[k])byDay[k]={lbl,ms:[]};
+    byDay[k].ms.push(m);
+  });
+
+  let html=`
+  <div class="save-notice">
+    💾 <div><b>Auto-Save ON</b> — Scores you enter are saved automatically in your browser. They stay even after closing!</div>
+  </div>
+  <div class="sec-hdr">📅 Full Match Schedule — Day by Day &nbsp;|&nbsp; ${TZ[curTZ].label}</div>
+  <div class="legend">
+    <div class="leg"><div class="leg-sq" style="background:#E8F5E9"></div>Finished</div>
+    <div class="leg"><div class="leg-sq" style="background:#FFFDE7"></div>🔴 Live</div>
+    <div class="leg"><div class="leg-sq" style="background:#E0F7FA"></div>★ Vancouver</div>
+    <div class="leg"><div class="leg-sq" style="background:#FFF3E0"></div>🇮🇶 Iraq</div>
+    <div class="leg"><div class="leg-sq" style="background:#FCE4EC"></div>🍁 Canada</div>
+    <div class="leg"><div class="leg-sq" style="background:#EEF6FF;border:2px solid #90CAF9"></div>Enter Score ✏️</div>
+  </div>`;
+
+  Object.keys(byDay).sort().forEach(k=>{
+    const{lbl,ms}=byDay[k];
+    const done=ms.filter(m=>results[m.id]).length;
+    html+=`<div class="day-block">
+    <div class="day-label">📆 ${lbl}<span class="day-count">${ms.length} matches${done?` · ${done} ✅`:''}</span></div>
+    <div class="matches-list">`;
+    ms.forEach(m=>{
+      const t1=GROUPS[m.grp][m.t1i],t2=GROUPS[m.grp][m.t2i];
+      const res=results[m.id];
+      const isVan=m.note.includes('van'),isIraq=m.note.includes('iraq'),isCan=m.note.includes('canada');
+      let rc=res?'done':(Date.now()>m.ko&&Date.now()<m.ko+115*60000?'live-now':'');
+      if(isVan)rc+=' van';else if(isIraq)rc+=' iraq';else if(isCan)rc+=' canada';
+
+      const scoreHTML = res
+        ? `<div class="score-result">${res[0]} : ${res[1]}</div>`
+        : `<div class="score-inputs">
+            <input class="score-in" id="s1_${m.id}" type="number" min="0" max="99"
+              placeholder="-" oninput="onScore('${m.id}')">
+            <span class="score-sep">:</span>
+            <input class="score-in" id="s2_${m.id}" type="number" min="0" max="99"
+              placeholder="-" oninput="onScore('${m.id}')">
+           </div>`;
+
+      const cd=res
+        ?`<span class="cd-badge cd-done">✅ Done</span>`
+        :`<span class="cd-badge cd-soon" data-ko="${m.ko}" data-mid="${m.id}">⏱ ...</span>`;
+
+      const vanB =isVan ?'<span class="badge b-van">★ Vancouver</span>':'';
+      const iraqB=isIraq?'<span class="badge b-iraq">🇮🇶 Iraq</span>':'';
+      const canB =isCan ?'<span class="badge b-canada">🍁 Canada</span>':'';
+      const grpB =`<span class="badge grp-b" onclick="showPage('${m.grp}',null)">Group ${m.grp}</span>`;
+      const cn=m.note.replace(/van|iraq|canada|Final Day/g,'').trim();
+
+      html+=`<div class="match-row ${rc}" id="row_${m.id}">
+        <div class="team1">${t1}</div>
+        <div class="score-center">${scoreHTML}<span style="font-size:.65rem;color:#90A4AE">${localTime(m.ko)} ${TZ[curTZ].abbr}</span></div>
+        <div class="team2">${t2}</div>
+        <div class="match-meta">${cd}${grpB}${vanB}${iraqB}${canB}
+          <span style="margin-left:auto;font-size:.66rem;color:#90A4AE">${m.city}</span>
+          ${cn?`<span>${cn}</span>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  document.getElementById('page-home').innerHTML=html;
+  // restore input values
+  MATCHES.forEach(m=>{
+    if(!results[m.id]){
+      const i1=document.getElementById('s1_'+m.id),i2=document.getElementById('s2_'+m.id);
+      if(i1)i1.value='';if(i2)i2.value='';
+    }
+  });
+  tickCDs();
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER GROUP PAGE
+// ════════════════════════════════════════════════════════
+function renderGroupPage(grp){
+  const teams=GROUPS[grp],std=standings(grp),rC=['r1','r2','r3','r4'];
+  const abbr=TZ[curTZ].abbr;
+
+  let stdRows='';
+  std.forEach((s,i)=>{
+    const rank=i+1,gd=s.GF-s.GA,gdStr=gd>0?`+${gd}`:String(gd);
+    const gdCls=gd>0?'gd-pos':gd<0?'gd-neg':'';
+    const qdot=rank<=2?'<span class="q-dot qa"></span>':rank===3?'<span class="q-dot qm"></span>':'';
+    stdRows+=`<tr class="${rC[i]}">
+      <td><b>${rank}</b>${qdot}</td>
+      <td class="tname">${teams[s.idx]}</td>
+      <td>${s.played}</td>
+      <td style="color:#2E7D32;font-weight:700">${s.W}</td>
+      <td style="color:#795548">${s.D}</td>
+      <td style="color:#C62828">${s.L}</td>
+      <td>${s.GF}</td><td>${s.GA}</td>
+      <td class="${gdCls}">${gdStr}</td>
+      <td class="pts">${s.pts}</td>
+    </tr>`;
+  });
+
+  const gms=MATCHES.filter(m=>m.grp===grp);
+  let gmRows='';
+  gms.forEach(m=>{
+    const t1=teams[m.t1i],t2=teams[m.t2i],res=results[m.id];
+    const isVan=m.note.includes('van'),isIraq=m.note.includes('iraq'),isCan=m.note.includes('canada');
+    let rc=res?'done':(Date.now()>m.ko&&Date.now()<m.ko+115*60000?'live-now':'');
+    if(isVan)rc+=' van';else if(isIraq)rc+=' iraq';else if(isCan)rc+=' canada';
+
+    const cd=res
+      ?`<span class="cd-badge cd-done" style="font-size:.63rem">✅</span>`
+      :`<span class="cd-badge cd-soon" style="font-size:.63rem" data-ko="${m.ko}" data-mid="${m.id}">⏱</span>`;
+
+    const scoreHTML=res
+      ?`<b style="color:var(--blue);font-size:1rem">${res[0]} : ${res[1]}</b>`
+      :`<div style="display:flex;align-items:center;gap:4px">
+          <input class="score-in" id="gs1_${m.id}" type="number" min="0" max="99"
+            placeholder="-" style="width:30px;height:26px;font-size:.85rem"
+            oninput="onScore('${m.id}');setTimeout(()=>renderGroupPage('${grp}'),100)">
+          <span class="score-sep" style="font-size:.9rem">:</span>
+          <input class="score-in" id="gs2_${m.id}" type="number" min="0" max="99"
+            placeholder="-" style="width:30px;height:26px;font-size:.85rem"
+            oninput="onScore('${m.id}');setTimeout(()=>renderGroupPage('${grp}'),100)">
+        </div>`;
+
+    const cn=m.note.replace(/van|iraq|canada|Final Day/g,'').trim();
+    gmRows+=`<div class="gm-row ${rc}" id="grow_${m.id}">
+      <div class="gm-t1">${t1}</div>
+      <div class="gm-center">${cd}${scoreHTML}<span style="font-size:.62rem;color:#90A4AE">${localTime(m.ko)} ${abbr}</span></div>
+      <div class="gm-t2">${t2}</div>
+      <div class="gm-meta">${m.city} · ${localDate(m.ko)} ${cn?'· '+cn:''}</div>
+    </div>`;
+  });
+
+  document.getElementById(`page-${grp}`).innerHTML=`
+  <div class="grp-page-title">
+    <h2>🏟 Group ${grp}</h2>
+    <p>${teams.join(' · ')}</p>
+  </div>
+  <div class="std-wrap">
+    <div class="std-title">📊 Standings — Updates instantly as you enter scores
+      &nbsp;|&nbsp; <span style="color:#90CAF9">●</span> Auto-qualify
+      &nbsp;|&nbsp; <span style="color:#A5D6A7">●</span> Best 3rd</div>
+    <table class="std">
+      <thead><tr>
+        <th>#</th><th>Team</th><th>P</th>
+        <th style="color:#A5D6A7">W</th><th style="color:#FFE082">D</th>
+        <th style="color:#EF9A9A">L</th>
+        <th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+      </tr></thead>
+      <tbody>${stdRows}</tbody>
+    </table>
+    <div class="tbreak">
+      ⚖️ <b>Tiebreaker (Article 13 — Official 2026):</b><br>
+      ① H2H Points → ② H2H Goal Diff → ③ H2H Goals →
+      ④ Overall GD → ⑤ Overall Goals → ⑥ Fair Play → ⑦ FIFA Ranking
+    </div>
+  </div>
+  <div class="grp-matches-wrap">
+    <div class="grp-matches-title">⚽ Matches — Enter score below ✏️ → standings update instantly</div>
+    ${gmRows}
+  </div>`;
+  tickCDs();
+}
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+function showPage(id,btn){
+  curPage=id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  renderCurrent();
+  window.scrollTo(0,0);
+}
+function renderCurrent(){
+  if(curPage==='home')renderHome();
+  else renderGroupPage(curPage);
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+renderHome();
+tickCDs();
+</script>
+</body>
+</html>
