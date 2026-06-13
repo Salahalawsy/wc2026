@@ -447,7 +447,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v8';
+const CURRENT_VER = 'wc2026_v9';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -756,6 +756,22 @@ function renderCurrent(){
 // ════════════════════════════════════════════════════════
 renderHome();
 tickCDs();
+
+// ── AUTO-RELOAD: checks for new version every 3 mins ──
+const APP_VERSION = 'v9';
+function checkForUpdates(){
+  const url = 'https://raw.githubusercontent.com/Salahalawsy/wc2026/main/version.json?nocache='+Date.now();
+  fetch(url).then(r=>r.json()).then(data=>{
+    if(data.version && data.version !== APP_VERSION){
+      window.location.replace(window.location.href.split('?')[0]+'?bust='+Date.now());
+    }
+  }).catch(()=>{});
+}
+setInterval(checkForUpdates, 3*60*1000);
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible') checkForUpdates();
+});
+
 </script>
 </body>
 </html>
