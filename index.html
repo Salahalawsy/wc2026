@@ -447,7 +447,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v10';
+const CURRENT_VER = 'wc2026_v11';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -456,7 +456,7 @@ if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
 // Pre-load known results
 let results = loadResults();
 function initKnownResults(){
-  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[4,1],'B1':[1,1],'C0':[1,1] };
+  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[4,1],'B1':[1,1],'C0':[1,1],'C1':[0,1],'D1':[2,0] };
   Object.entries(known).forEach(([id,[g1,g2]])=>{
     if(results[id]===undefined) results[id]=[g1,g2];
   });
@@ -758,7 +758,7 @@ renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version every 3 mins ──
-const APP_VERSION = 'v10';
+const APP_VERSION = 'v11';
 function checkForUpdates(){
   const url = 'https://raw.githubusercontent.com/Salahalawsy/wc2026/main/version.json?nocache='+Date.now();
   fetch(url).then(r=>r.json()).then(data=>{
