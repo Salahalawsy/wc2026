@@ -325,18 +325,18 @@ function setTZ(tz){
 // GROUPS & MATCHES
 // ════════════════════════════════════════════════════════
 const GROUPS = {
-  A:["Mexico","South Korea","Czechia","South Africa"],
-  B:["Canada","Switzerland","Qatar","Bosnia & Herz."],
-  C:["Brazil","Morocco","Haiti","Scotland"],
-  D:["USA","Australia","Türkiye","Paraguay"],
-  E:["Germany","Ecuador","Ivory Coast","Curaçao"],
-  F:["Netherlands","Japan","Sweden","Tunisia"],
-  G:["Belgium","Iran","New Zealand","Egypt"],
-  H:["Spain","Saudi Arabia","Uruguay","Cape Verde"],
-  I:["France","Senegal","Iraq","Norway"],
-  J:["Argentina","Algeria","Austria","Jordan"],
-  K:["Portugal","Colombia","Uzbekistan","DR Congo"],
-  L:["England","Croatia","Ghana","Panama"]
+  A:["Mexico", "South Africa", "South Korea", "Czechia"],
+  B:["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
+  C:["Brazil", "Morocco", "Haiti", "Scotland"],
+  D:["United States", "Paraguay", "Australia", "Türkiye"],
+  E:["Germany", "Curaçao", "Ivory Coast", "Ecuador"],
+  F:["Netherlands", "Japan", "Sweden", "Tunisia"],
+  G:["Belgium", "Egypt", "Iran", "New Zealand"],
+  H:["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"],
+  I:["France", "Senegal", "Iraq", "Norway"],
+  J:["Argentina", "Algeria", "Austria", "Jordan"],
+  K:["Portugal", "DR Congo", "Uzbekistan", "Colombia"],
+  L:["England", "Croatia", "Ghana", "Panama"],
 };
 
 // Convert PT kickoff to UTC ms
@@ -347,95 +347,95 @@ function pt(date,h,m=0){
 
 // Match schema: {id, grp, t1i, t2i, ko(UTC ms), venue, city, note}
 const MATCHES = [
-  // ── Jun 11 Thu ──
-  {id:'A0',grp:'A',t1i:0,t2i:3,ko:pt('2026-06-11',12,0), venue:'Estadio Azteca',          city:'Mexico City',  note:'Opening Match'},
-  {id:'A1',grp:'A',t1i:1,t2i:2,ko:pt('2026-06-11',19,0), venue:'Estadio Akron',           city:'Zapopan',      note:''},
-  // ── Jun 12 Fri ──
-  {id:'B0',grp:'B',t1i:0,t2i:3,ko:pt('2026-06-12',12,0), venue:'BMO Field',               city:'Toronto',      note:'canada'},
-  {id:'D0',grp:'D',t1i:0,t2i:3,ko:pt('2026-06-12',18,0), venue:'SoFi Stadium',            city:'Los Angeles',  note:''},
-  // ── Jun 13 Sat ──
-  {id:'B1',grp:'B',t1i:2,t2i:1,ko:pt('2026-06-13',12,0), venue:"Levi's Stadium",          city:'SF Bay Area',  note:''},
-  {id:'C0',grp:'C',t1i:0,t2i:1,ko:pt('2026-06-13',15,0), venue:'MetLife Stadium',         city:'New York',     note:''},
-  {id:'C1',grp:'C',t1i:2,t2i:3,ko:pt('2026-06-13',18,0), venue:'Gillette Stadium',        city:'Boston',       note:''},
-  {id:'D1',grp:'D',t1i:1,t2i:2,ko:pt('2026-06-13',21,0), venue:'BC Place',                city:'Vancouver',    note:'van'},
-  // ── Jun 14 Sun ──
-  {id:'E0',grp:'E',t1i:0,t2i:3,ko:pt('2026-06-14',10,0), venue:'NRG Stadium',             city:'Houston',      note:''},
-  {id:'F0',grp:'F',t1i:0,t2i:1,ko:pt('2026-06-14',13,0), venue:'AT&T Stadium',            city:'Dallas',       note:''},
-  {id:'E1',grp:'E',t1i:1,t2i:2,ko:pt('2026-06-14',16,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
-  {id:'F1',grp:'F',t1i:2,t2i:3,ko:pt('2026-06-14',19,0), venue:'Estadio BBVA',            city:'Monterrey',    note:''},
-  // ── Jun 15 Mon ──
-  {id:'H0',grp:'H',t1i:0,t2i:3,ko:pt('2026-06-15',9,0),  venue:'Mercedes-Benz Stadium',   city:'Atlanta',      note:''},
-  {id:'G0',grp:'G',t1i:0,t2i:3,ko:pt('2026-06-15',12,0), venue:'Lumen Field',             city:'Seattle',      note:''},
-  {id:'H1',grp:'H',t1i:1,t2i:2,ko:pt('2026-06-15',15,0), venue:'Hard Rock Stadium',       city:'Miami',        note:''},
-  {id:'G1',grp:'G',t1i:1,t2i:2,ko:pt('2026-06-15',18,0), venue:'SoFi Stadium',            city:'Los Angeles',  note:''},
-  // ── Jun 16 Tue ──
-  {id:'I0',grp:'I',t1i:0,t2i:1,ko:pt('2026-06-16',12,0), venue:'MetLife Stadium',         city:'New York',     note:''},
-  {id:'I1',grp:'I',t1i:2,t2i:3,ko:pt('2026-06-16',15,0), venue:'Gillette Stadium',        city:'Boston',       note:'iraq'},
-  {id:'J0',grp:'J',t1i:0,t2i:1,ko:pt('2026-06-16',18,0), venue:'Arrowhead Stadium',       city:'Kansas City',  note:''},
-  {id:'J1',grp:'J',t1i:2,t2i:3,ko:pt('2026-06-16',21,0), venue:"Levi's Stadium",          city:'SF Bay Area',  note:''},
-  // ── Jun 17 Wed ──
-  {id:'K0',grp:'K',t1i:0,t2i:3,ko:pt('2026-06-17',10,0), venue:'NRG Stadium',             city:'Houston',      note:''},
-  {id:'L0',grp:'L',t1i:0,t2i:1,ko:pt('2026-06-17',13,0), venue:'AT&T Stadium',            city:'Dallas',       note:''},
-  {id:'L1',grp:'L',t1i:2,t2i:3,ko:pt('2026-06-17',16,0), venue:'BMO Field',               city:'Toronto',      note:'canada'},
-  {id:'K1',grp:'K',t1i:1,t2i:2,ko:pt('2026-06-17',19,0), venue:'Estadio Azteca',          city:'Mexico City',  note:''},
-  // ── Jun 18 Thu ──
-  {id:'A2',grp:'A',t1i:2,t2i:3,ko:pt('2026-06-18',9,0),  venue:'Mercedes-Benz Stadium',   city:'Atlanta',      note:''},
-  {id:'B2',grp:'B',t1i:1,t2i:3,ko:pt('2026-06-18',12,0), venue:'SoFi Stadium',            city:'Los Angeles',  note:''},
-  {id:'B3',grp:'B',t1i:0,t2i:2,ko:pt('2026-06-18',15,0), venue:'BC Place',                city:'Vancouver',    note:'van canada'},
-  {id:'A3',grp:'A',t1i:0,t2i:1,ko:pt('2026-06-18',18,0), venue:'Estadio Akron',           city:'Zapopan',      note:''},
-  // ── Jun 19 Fri ──
-  {id:'D2',grp:'D',t1i:0,t2i:1,ko:pt('2026-06-19',12,0), venue:'Lumen Field',             city:'Seattle',      note:''},
-  {id:'C2',grp:'C',t1i:3,t2i:1,ko:pt('2026-06-19',15,0), venue:'Gillette Stadium',        city:'Boston',       note:''},
-  {id:'C3',grp:'C',t1i:0,t2i:2,ko:pt('2026-06-19',17,30),venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
-  {id:'D3',grp:'D',t1i:3,t2i:2,ko:pt('2026-06-19',20,0), venue:"Levi's Stadium",          city:'SF Bay Area',  note:''},
-  // ── Jun 20 Sat ──
-  {id:'F2',grp:'F',t1i:0,t2i:2,ko:pt('2026-06-20',10,0), venue:'NRG Stadium',             city:'Houston',      note:''},
-  {id:'E2',grp:'E',t1i:0,t2i:2,ko:pt('2026-06-20',13,0), venue:'BMO Field',               city:'Toronto',      note:'canada'},
-  {id:'E3',grp:'E',t1i:1,t2i:3,ko:pt('2026-06-20',17,0), venue:'Arrowhead Stadium',       city:'Kansas City',  note:''},
-  {id:'F3',grp:'F',t1i:3,t2i:1,ko:pt('2026-06-20',21,0), venue:'Estadio BBVA',            city:'Monterrey',    note:'Match #1000'},
-  // ── Jun 21 Sun ──
-  {id:'H2',grp:'H',t1i:0,t2i:1,ko:pt('2026-06-21',9,0),  venue:'Mercedes-Benz Stadium',   city:'Atlanta',      note:''},
-  {id:'G2',grp:'G',t1i:0,t2i:1,ko:pt('2026-06-21',12,0), venue:'SoFi Stadium',            city:'Los Angeles',  note:''},
-  {id:'H3',grp:'H',t1i:2,t2i:3,ko:pt('2026-06-21',15,0), venue:'Hard Rock Stadium',       city:'Miami',        note:''},
-  {id:'G3',grp:'G',t1i:2,t2i:3,ko:pt('2026-06-21',18,0), venue:'BC Place',                city:'Vancouver',    note:'van'},
-  // ── Jun 22 Mon ──
-  {id:'J2',grp:'J',t1i:0,t2i:2,ko:pt('2026-06-22',10,0), venue:'AT&T Stadium',            city:'Dallas',       note:''},
+  // ── Thursday 2026-06-11 ──
+  {id:'A0',grp:'A',t1i:0,t2i:1,ko:pt('2026-06-11',12,0), venue:'Estadio Azteca', city:'Mexico City', note:''},
+  {id:'A1',grp:'A',t1i:2,t2i:3,ko:pt('2026-06-11',19,0), venue:'Estadio Akron', city:'Guadalajara', note:''},
+  // ── Friday 2026-06-12 ──
+  {id:'B0',grp:'B',t1i:0,t2i:1,ko:pt('2026-06-12',12,0), venue:'BMO Field', city:'Toronto', note:''},
+  {id:'D0',grp:'D',t1i:0,t2i:1,ko:pt('2026-06-12',18,0), venue:'SoFi Stadium', city:'Inglewood', note:''},
+  {id:'D1',grp:'D',t1i:2,t2i:3,ko:pt('2026-06-12',21,0), venue:'BC Place', city:'Vancouver', note:'van'},
+  // ── Saturday 2026-06-13 ──
+  {id:'B1',grp:'B',t1i:2,t2i:3,ko:pt('2026-06-13',12,0), venue:'Levi's Stadium', city:'Santa Clara', note:''},
+  {id:'C0',grp:'C',t1i:0,t2i:1,ko:pt('2026-06-13',15,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'C1',grp:'C',t1i:2,t2i:3,ko:pt('2026-06-13',18,0), venue:'Gillette Stadium', city:'Foxborough', note:''},
+  // ── Sunday 2026-06-14 ──
+  {id:'E0',grp:'E',t1i:0,t2i:1,ko:pt('2026-06-14',10,0), venue:'NRG Stadium', city:'Houston', note:''},
+  {id:'F0',grp:'F',t1i:0,t2i:1,ko:pt('2026-06-14',13,0), venue:'AT&T Stadium', city:'Arlington', note:''},
+  {id:'E1',grp:'E',t1i:2,t2i:3,ko:pt('2026-06-14',16,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
+  {id:'F1',grp:'F',t1i:2,t2i:3,ko:pt('2026-06-14',19,0), venue:'Estadio BBVA', city:'Monterrey', note:''},
+  // ── Monday 2026-06-15 ──
+  {id:'H0',grp:'H',t1i:0,t2i:1,ko:pt('2026-06-15',9,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'G0',grp:'G',t1i:0,t2i:1,ko:pt('2026-06-15',12,0), venue:'Lumen Field', city:'Seattle', note:''},
+  {id:'H1',grp:'H',t1i:2,t2i:3,ko:pt('2026-06-15',15,0), venue:'Hard Rock Stadium', city:'Miami', note:''},
+  {id:'G1',grp:'G',t1i:2,t2i:3,ko:pt('2026-06-15',18,0), venue:'SoFi Stadium', city:'Inglewood', note:''},
+  // ── Tuesday 2026-06-16 ──
+  {id:'I0',grp:'I',t1i:0,t2i:1,ko:pt('2026-06-16',12,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'I1',grp:'I',t1i:2,t2i:3,ko:pt('2026-06-16',15,0), venue:'Gillette Stadium', city:'Foxborough', note:'iraq'},
+  {id:'J0',grp:'J',t1i:0,t2i:1,ko:pt('2026-06-16',18,0), venue:'Arrowhead Stadium', city:'Kansas City', note:''},
+  {id:'J1',grp:'J',t1i:2,t2i:3,ko:pt('2026-06-16',21,0), venue:'Levi's Stadium', city:'Santa Clara', note:''},
+  // ── Wednesday 2026-06-17 ──
+  {id:'K0',grp:'K',t1i:0,t2i:1,ko:pt('2026-06-17',10,0), venue:'NRG Stadium', city:'Houston', note:''},
+  {id:'L0',grp:'L',t1i:0,t2i:1,ko:pt('2026-06-17',13,0), venue:'AT&T Stadium', city:'Arlington', note:''},
+  {id:'L1',grp:'L',t1i:2,t2i:3,ko:pt('2026-06-17',16,0), venue:'BMO Field', city:'Toronto', note:''},
+  {id:'K1',grp:'K',t1i:2,t2i:3,ko:pt('2026-06-17',19,0), venue:'Estadio Azteca', city:'Mexico City', note:''},
+  // ── Thursday 2026-06-18 ──
+  {id:'A2',grp:'A',t1i:3,t2i:1,ko:pt('2026-06-18',9,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'B2',grp:'B',t1i:3,t2i:1,ko:pt('2026-06-18',12,0), venue:'SoFi Stadium', city:'Inglewood', note:''},
+  {id:'B3',grp:'B',t1i:0,t2i:2,ko:pt('2026-06-18',15,0), venue:'BC Place', city:'Vancouver', note:'van canada'},
+  {id:'A3',grp:'A',t1i:0,t2i:2,ko:pt('2026-06-18',18,0), venue:'Estadio Akron', city:'Guadalajara', note:''},
+  // ── Friday 2026-06-19 ──
+  {id:'D2',grp:'D',t1i:0,t2i:2,ko:pt('2026-06-19',12,0), venue:'Lumen Field', city:'Seattle', note:''},
+  {id:'C2',grp:'C',t1i:3,t2i:1,ko:pt('2026-06-19',15,0), venue:'Gillette Stadium', city:'Foxborough', note:''},
+  {id:'C3',grp:'C',t1i:0,t2i:2,ko:pt('2026-06-19',17,30), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
+  {id:'D3',grp:'D',t1i:3,t2i:1,ko:pt('2026-06-19',20,0), venue:'Levi's Stadium', city:'Santa Clara', note:''},
+  {id:'F3',grp:'F',t1i:3,t2i:1,ko:pt('2026-06-19',21,0), venue:'Estadio BBVA', city:'Monterrey', note:''},
+  // ── Saturday 2026-06-20 ──
+  {id:'F2',grp:'F',t1i:0,t2i:2,ko:pt('2026-06-20',10,0), venue:'NRG Stadium', city:'Houston', note:''},
+  {id:'E2',grp:'E',t1i:0,t2i:2,ko:pt('2026-06-20',13,0), venue:'BMO Field', city:'Toronto', note:''},
+  {id:'E3',grp:'E',t1i:3,t2i:1,ko:pt('2026-06-20',17,0), venue:'Arrowhead Stadium', city:'Kansas City', note:''},
+  // ── Sunday 2026-06-21 ──
+  {id:'H2',grp:'H',t1i:0,t2i:2,ko:pt('2026-06-21',9,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'G2',grp:'G',t1i:0,t2i:2,ko:pt('2026-06-21',12,0), venue:'SoFi Stadium', city:'Inglewood', note:''},
+  {id:'H3',grp:'H',t1i:3,t2i:1,ko:pt('2026-06-21',15,0), venue:'Hard Rock Stadium', city:'Miami', note:''},
+  {id:'G3',grp:'G',t1i:3,t2i:1,ko:pt('2026-06-21',18,0), venue:'BC Place', city:'Vancouver', note:'van'},
+  // ── Monday 2026-06-22 ──
+  {id:'J2',grp:'J',t1i:0,t2i:2,ko:pt('2026-06-22',10,0), venue:'AT&T Stadium', city:'Arlington', note:''},
   {id:'I2',grp:'I',t1i:0,t2i:2,ko:pt('2026-06-22',14,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:'iraq'},
-  {id:'I3',grp:'I',t1i:3,t2i:1,ko:pt('2026-06-22',17,0), venue:'MetLife Stadium',         city:'New York',     note:''},
-  {id:'J3',grp:'J',t1i:1,t2i:3,ko:pt('2026-06-22',20,0), venue:"Levi's Stadium",          city:'SF Bay Area',  note:''},
-  // ── Jun 23 Tue ──
-  {id:'K2',grp:'K',t1i:0,t2i:1,ko:pt('2026-06-23',10,0), venue:'NRG Stadium',             city:'Houston',      note:''},
-  {id:'L2',grp:'L',t1i:0,t2i:2,ko:pt('2026-06-23',13,0), venue:'Gillette Stadium',        city:'Boston',       note:''},
-  {id:'L3',grp:'L',t1i:3,t2i:1,ko:pt('2026-06-23',16,0), venue:'BMO Field',               city:'Toronto',      note:'canada'},
-  {id:'K3',grp:'K',t1i:2,t2i:3,ko:pt('2026-06-23',19,0), venue:'Estadio Akron',           city:'Zapopan',      note:''},
-  // ── Jun 24 Wed ──
-  {id:'B4',grp:'B',t1i:1,t2i:0,ko:pt('2026-06-24',12,0), venue:'BC Place',                city:'Vancouver',    note:'van canada Final Day'},
-  {id:'B5',grp:'B',t1i:3,t2i:2,ko:pt('2026-06-24',12,0), venue:'Lumen Field',             city:'Seattle',      note:'Final Day'},
-  {id:'C4',grp:'C',t1i:3,t2i:0,ko:pt('2026-06-24',15,0), venue:'Hard Rock Stadium',       city:'Miami',        note:'Final Day'},
-  {id:'C5',grp:'C',t1i:1,t2i:2,ko:pt('2026-06-24',15,0), venue:'Mercedes-Benz Stadium',   city:'Atlanta',      note:'Final Day'},
-  {id:'A4',grp:'A',t1i:2,t2i:0,ko:pt('2026-06-24',18,0), venue:'Estadio Azteca',          city:'Mexico City',  note:'Final Day'},
-  {id:'A5',grp:'A',t1i:3,t2i:1,ko:pt('2026-06-24',18,0), venue:'Estadio BBVA',            city:'Monterrey',    note:'Final Day'},
-  // ── Jun 25 Thu ──
-  {id:'E4',grp:'E',t1i:3,t2i:2,ko:pt('2026-06-25',13,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:'Final Day'},
-  {id:'E5',grp:'E',t1i:1,t2i:0,ko:pt('2026-06-25',13,0), venue:'MetLife Stadium',         city:'New York',     note:'Final Day'},
-  {id:'F4',grp:'F',t1i:1,t2i:2,ko:pt('2026-06-25',16,0), venue:'AT&T Stadium',            city:'Dallas',       note:'Final Day'},
-  {id:'F5',grp:'F',t1i:3,t2i:0,ko:pt('2026-06-25',16,0), venue:'Arrowhead Stadium',       city:'Kansas City',  note:'Final Day'},
-  {id:'D4',grp:'D',t1i:2,t2i:0,ko:pt('2026-06-25',19,0), venue:'SoFi Stadium',            city:'Los Angeles',  note:'Final Day'},
-  {id:'D5',grp:'D',t1i:3,t2i:1,ko:pt('2026-06-25',19,0), venue:"Levi's Stadium",          city:'SF Bay Area',  note:'Final Day'},
-  // ── Jun 26 Fri ──
-  {id:'I4',grp:'I',t1i:3,t2i:0,ko:pt('2026-06-26',12,0), venue:'Gillette Stadium',        city:'Boston',       note:'Final Day'},
-  {id:'I5',grp:'I',t1i:1,t2i:2,ko:pt('2026-06-26',12,0), venue:'BMO Field',               city:'Toronto',      note:'iraq canada Final Day'},
-  {id:'H4',grp:'H',t1i:3,t2i:1,ko:pt('2026-06-26',17,0), venue:'NRG Stadium',             city:'Houston',      note:'Final Day'},
-  {id:'H5',grp:'H',t1i:2,t2i:0,ko:pt('2026-06-26',17,0), venue:'Estadio Akron',           city:'Zapopan',      note:'Final Day'},
-  {id:'G4',grp:'G',t1i:3,t2i:1,ko:pt('2026-06-26',20,0), venue:'Lumen Field',             city:'Seattle',      note:'Final Day'},
-  {id:'G5',grp:'G',t1i:2,t2i:0,ko:pt('2026-06-26',20,0), venue:'BC Place',                city:'Vancouver',    note:'van Final Day'},
-  // ── Jun 27 Sat ──
-  {id:'L4',grp:'L',t1i:3,t2i:0,ko:pt('2026-06-27',14,0), venue:'MetLife Stadium',         city:'New York',     note:'Final Day'},
-  {id:'L5',grp:'L',t1i:1,t2i:2,ko:pt('2026-06-27',14,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:'Final Day'},
-  {id:'K4',grp:'K',t1i:1,t2i:0,ko:pt('2026-06-27',16,30),venue:'Hard Rock Stadium',       city:'Miami',        note:'Final Day'},
-  {id:'K5',grp:'K',t1i:3,t2i:2,ko:pt('2026-06-27',16,30),venue:'Mercedes-Benz Stadium',   city:'Atlanta',      note:'Final Day'},
-  {id:'J4',grp:'J',t1i:1,t2i:2,ko:pt('2026-06-27',19,0), venue:'Arrowhead Stadium',       city:'Kansas City',  note:'Final Day'},
-  {id:'J5',grp:'J',t1i:3,t2i:0,ko:pt('2026-06-27',19,0), venue:'AT&T Stadium',            city:'Dallas',       note:'Final Day'},
+  {id:'I3',grp:'I',t1i:3,t2i:1,ko:pt('2026-06-22',17,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'J3',grp:'J',t1i:3,t2i:1,ko:pt('2026-06-22',20,0), venue:'Levi's Stadium', city:'Santa Clara', note:''},
+  // ── Tuesday 2026-06-23 ──
+  {id:'K2',grp:'K',t1i:0,t2i:2,ko:pt('2026-06-23',10,0), venue:'NRG Stadium', city:'Houston', note:''},
+  {id:'L2',grp:'L',t1i:0,t2i:2,ko:pt('2026-06-23',13,0), venue:'Gillette Stadium', city:'Foxborough', note:''},
+  {id:'L3',grp:'L',t1i:3,t2i:1,ko:pt('2026-06-23',16,0), venue:'BMO Field', city:'Toronto', note:''},
+  {id:'K3',grp:'K',t1i:3,t2i:1,ko:pt('2026-06-23',19,0), venue:'Estadio Akron', city:'Guadalajara', note:''},
+  // ── Wednesday 2026-06-24 ──
+  {id:'B4',grp:'B',t1i:3,t2i:0,ko:pt('2026-06-24',12,0), venue:'BC Place', city:'Vancouver', note:'van canada'},
+  {id:'B5',grp:'B',t1i:1,t2i:2,ko:pt('2026-06-24',12,0), venue:'Lumen Field', city:'Seattle', note:''},
+  {id:'C4',grp:'C',t1i:3,t2i:0,ko:pt('2026-06-24',15,0), venue:'Hard Rock Stadium', city:'Miami', note:''},
+  {id:'C5',grp:'C',t1i:1,t2i:2,ko:pt('2026-06-24',15,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'A4',grp:'A',t1i:3,t2i:0,ko:pt('2026-06-24',18,0), venue:'Estadio Azteca', city:'Mexico City', note:''},
+  {id:'A5',grp:'A',t1i:1,t2i:2,ko:pt('2026-06-24',18,0), venue:'Estadio BBVA', city:'Monterrey', note:''},
+  // ── Thursday 2026-06-25 ──
+  {id:'E4',grp:'E',t1i:1,t2i:2,ko:pt('2026-06-25',13,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
+  {id:'E5',grp:'E',t1i:3,t2i:0,ko:pt('2026-06-25',13,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'F4',grp:'F',t1i:1,t2i:2,ko:pt('2026-06-25',16,0), venue:'AT&T Stadium', city:'Arlington', note:''},
+  {id:'F5',grp:'F',t1i:3,t2i:0,ko:pt('2026-06-25',16,0), venue:'Arrowhead Stadium', city:'Kansas City', note:''},
+  {id:'D4',grp:'D',t1i:3,t2i:0,ko:pt('2026-06-25',19,0), venue:'SoFi Stadium', city:'Inglewood', note:''},
+  {id:'D5',grp:'D',t1i:1,t2i:2,ko:pt('2026-06-25',19,0), venue:'Levi's Stadium', city:'Santa Clara', note:''},
+  // ── Friday 2026-06-26 ──
+  {id:'I4',grp:'I',t1i:3,t2i:0,ko:pt('2026-06-26',12,0), venue:'Gillette Stadium', city:'Foxborough', note:''},
+  {id:'I5',grp:'I',t1i:1,t2i:2,ko:pt('2026-06-26',12,0), venue:'BMO Field', city:'Toronto', note:'iraq'},
+  {id:'H4',grp:'H',t1i:1,t2i:2,ko:pt('2026-06-26',17,0), venue:'NRG Stadium', city:'Houston', note:''},
+  {id:'H5',grp:'H',t1i:3,t2i:0,ko:pt('2026-06-26',17,0), venue:'Estadio Akron', city:'Guadalajara', note:''},
+  {id:'G4',grp:'G',t1i:1,t2i:2,ko:pt('2026-06-26',20,0), venue:'Lumen Field', city:'Seattle', note:''},
+  {id:'G5',grp:'G',t1i:3,t2i:0,ko:pt('2026-06-26',20,0), venue:'BC Place', city:'Vancouver', note:'van'},
+  // ── Saturday 2026-06-27 ──
+  {id:'L4',grp:'L',t1i:3,t2i:0,ko:pt('2026-06-27',14,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'L5',grp:'L',t1i:1,t2i:2,ko:pt('2026-06-27',14,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
+  {id:'K4',grp:'K',t1i:3,t2i:0,ko:pt('2026-06-27',16,30), venue:'Hard Rock Stadium', city:'Miami', note:''},
+  {id:'K5',grp:'K',t1i:1,t2i:2,ko:pt('2026-06-27',16,30), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'J4',grp:'J',t1i:3,t2i:0,ko:pt('2026-06-27',19,0), venue:'AT&T Stadium', city:'Arlington', note:''},
+  {id:'J5',grp:'J',t1i:1,t2i:2,ko:pt('2026-06-27',19,0), venue:'Arrowhead Stadium', city:'Kansas City', note:''},
 ];
 
 // ════════════════════════════════════════════════════════
@@ -450,7 +450,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v19';
+const CURRENT_VER = 'wc2026_v20';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -459,7 +459,7 @@ if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
 // Pre-load known results
 let results = loadResults();
 function initKnownResults(){
-  const known = { 'A0':[2,0],'A1':[2,1],'B0':[1,1],'D0':[4,1],'B1':[1,1],'C0':[1,1],'C1':[0,1],'D1':[2,0],'E0':[7,1],'F0':[2,2],'E1':[1,0],'F1':[5,1],'H0':[0,0],'G0':[1,1],'H1':[1,1],'G1':[2,2],'I0':[3,1],'I1':[1,4],'J0':[3,0],'J1':[3,1],'K0':[1,1],'L0':[4,2],'L1':[1,0],'K1':[1,3],'B3':[6,0],'A2':[1,1],'B2':[4,1],'A3':[1,0] };
+  const known = { 'A0':[2,0],'A1':[2,1],'A2':[1,1],'A3':[1,0],'B0':[1,1],'B1':[1,1],'B2':[4,1],'B3':[6,0],'C0':[1,1],'C1':[0,1],'D0':[4,1],'D1':[2,0],'E0':[7,1],'E1':[1,0],'F0':[2,2],'F1':[5,1],'G0':[1,1],'G1':[2,2],'H0':[0,0],'H1':[1,1],'I0':[3,1],'I1':[1,4],'J0':[3,0],'J1':[3,1],'K0':[1,1],'K1':[1,3],'L0':[4,2],'L1':[1,0] };
   Object.entries(known).forEach(([id,[g1,g2]])=>{
     if(results[id]===undefined) results[id]=[g1,g2];
   });
@@ -761,7 +761,7 @@ renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v19';
+const APP_VERSION = 'v20';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
