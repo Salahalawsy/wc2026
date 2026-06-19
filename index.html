@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🏆 FIFA World Cup 2026 — Live Tracker</title>
 <style>
@@ -447,7 +450,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v16';
+const CURRENT_VER = 'wc2026_v17';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -757,20 +760,26 @@ function renderCurrent(){
 renderHome();
 tickCDs();
 
-// ── AUTO-RELOAD: checks for new version every 3 mins ──
-const APP_VERSION = 'v16';
+// ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
+const APP_VERSION = 'v17';
 function checkForUpdates(){
-  const url = 'https://raw.githubusercontent.com/Salahalawsy/wc2026/main/version.json?nocache='+Date.now();
-  fetch(url).then(r=>r.json()).then(data=>{
-    if(data.version && data.version !== APP_VERSION){
-      window.location.replace(window.location.href.split('?')[0]+'?bust='+Date.now());
-    }
-  }).catch(()=>{});
+  // Same-origin fetch — works reliably in Safari (no CORS issues)
+  fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.version && data.version !== APP_VERSION){
+        window.location.replace(window.location.pathname + '?bust=' + Date.now());
+      }
+    })
+    .catch(()=>{});
 }
-setInterval(checkForUpdates, 3*60*1000);
+// Check immediately on load, then every 60 seconds
+checkForUpdates();
+setInterval(checkForUpdates, 60*1000);
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible') checkForUpdates();
 });
+window.addEventListener('pageshow', checkForUpdates);
 
 </script>
 </body>
