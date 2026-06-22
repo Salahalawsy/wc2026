@@ -450,7 +450,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v24';
+const CURRENT_VER = 'wc2026_v25';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -459,7 +459,7 @@ if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
 // Pre-load known results
 let results = loadResults();
 function initKnownResults(){
-  const known = { 'A0':[2,0],'A1':[2,1],'A2':[1,1],'A3':[1,0],'B0':[1,1],'B1':[1,1],'B2':[4,1],'B3':[6,0],'C0':[1,1],'C1':[0,1],'D0':[4,1],'D1':[2,0],'E0':[7,1],'E1':[1,0],'F0':[2,2],'F1':[5,1],'G0':[1,1],'G1':[2,2],'H0':[0,0],'H1':[1,1],'I0':[3,1],'I1':[1,4],'J0':[3,0],'J1':[3,1],'K0':[1,1],'K1':[1,3],'L0':[4,2],'L1':[1,0],'C2':[0,1],'C3':[3,0],'D2':[2,0],'D3':[0,1],'E2':[2,1],'E3':[0,0],'F2':[5,1],'F3':[0,4],'H2':[4,0],'G2':[0,0] };
+  const known = { 'A0':[2,0],'A1':[2,1],'A2':[1,1],'A3':[1,0],'B0':[1,1],'B1':[1,1],'B2':[4,1],'B3':[6,0],'C0':[1,1],'C1':[0,1],'D0':[4,1],'D1':[2,0],'E0':[7,1],'E1':[1,0],'F0':[2,2],'F1':[5,1],'G0':[1,1],'G1':[2,2],'H0':[0,0],'H1':[1,1],'I0':[3,1],'I1':[1,4],'J0':[3,0],'J1':[3,1],'K0':[1,1],'K1':[1,3],'L0':[4,2],'L1':[1,0],'C2':[0,1],'C3':[3,0],'D2':[2,0],'D3':[0,1],'E2':[2,1],'E3':[0,0],'F2':[5,1],'F3':[0,4],'H2':[4,0],'G2':[0,0],'H3':[2,2],'G3':[1,3] };
   Object.entries(known).forEach(([id,[g1,g2]])=>{
     if(results[id]===undefined) results[id]=[g1,g2];
   });
@@ -761,7 +761,7 @@ renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v24';
+const APP_VERSION = 'v25';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
