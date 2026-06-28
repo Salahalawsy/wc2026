@@ -452,7 +452,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v40';
+const CURRENT_VER = 'wc2026_v41';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -806,6 +806,68 @@ function onScoreR32(id){
     delete stored[key];
   }
   saveResults(stored);
+  renderR32QualStatus();
+}
+
+// ── Qualified / Eliminated tracker ──
+function renderR32QualStatus(){
+  const stored = loadResults();
+  const qualified = [];
+  const eliminated = [];
+  const pending = [];
+
+  R32_MATCHES.forEach(m => {
+    const res = stored['r32_'+m.id];
+    if(!res){
+      pending.push(m);
+      return;
+    }
+    const [g1, g2] = res;
+    if(g1 > g2){ qualified.push({team:m.t1, beat:m.t2}); eliminated.push({team:m.t2, lostTo:m.t1}); }
+    else if(g2 > g1){ qualified.push({team:m.t2, beat:m.t1}); eliminated.push({team:m.t1, lostTo:m.t2}); }
+    else { qualified.push({team:m.t1+' / '+m.t2, beat:'(penalties — enter winner manually)'}); }
+  });
+
+  let html = `<div class="grp-matches-wrap" style="margin-top:14px">
+    <div class="grp-matches-title">📋 Qualified for Round of 16 (${qualified.length}/16)</div>`;
+  if(qualified.length === 0){
+    html += `<div style="padding:14px;text-align:center;color:#90A4AE;font-size:.82rem">No results entered yet — enter scores above to see who advances</div>`;
+  } else {
+    qualified.forEach(q => {
+      html += `<div class="gm-row done" style="grid-template-columns:1fr">
+        <div class="gm-t1" style="text-align:center">✅ <b>${q.team}</b> <span style="color:#78909C;font-size:.78rem">beat ${q.beat}</span></div>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+
+  html += `<div class="grp-matches-wrap">
+    <div class="grp-matches-title" style="background:#8D2E2E">❌ Eliminated (${eliminated.length}/16)</div>`;
+  if(eliminated.length === 0){
+    html += `<div style="padding:14px;text-align:center;color:#90A4AE;font-size:.82rem">No eliminations yet</div>`;
+  } else {
+    eliminated.forEach(e => {
+      html += `<div class="gm-row" style="grid-template-columns:1fr;background:#FFEBEE">
+        <div class="gm-t1" style="text-align:center">❌ <b>${e.team}</b> <span style="color:#78909C;font-size:.78rem">lost to ${e.lostTo}</span></div>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+
+  if(pending.length > 0){
+    html += `<div class="grp-matches-wrap">
+      <div class="grp-matches-title" style="background:#546E7A">⏳ Pending (${pending.length}/16)</div>`;
+    pending.forEach(p => {
+      html += `<div class="gm-row" style="grid-template-columns:1fr 1fr">
+        <div class="gm-t1">${p.t1}</div>
+        <div class="gm-t2">${p.t2}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  const container = document.getElementById('r32-qual-status');
+  if(container) container.innerHTML = html;
 }
 
 function renderR32(){
@@ -871,17 +933,19 @@ function renderR32(){
 
   html += `<div class="tbreak">
     ⚖️ <b>Knockout Rule:</b> If tied after 90 minutes → Extra Time (30 min) → Penalty Shootout. No more draws from here!
-  </div>`;
+  </div>
+  <div id="r32-qual-status"></div>`;
 
   document.getElementById('page-r32').innerHTML = html;
   tickCDs();
+  renderR32QualStatus();
 }
 
 renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v40';
+const APP_VERSION = 'v41';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
