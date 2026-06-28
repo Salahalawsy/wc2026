@@ -282,6 +282,7 @@ footer .ft-name{color:var(--gold);font-size:.82rem;font-weight:600;display:block
     <button class="tab" onclick="showPage('J',this)">J</button>
     <button class="tab" onclick="showPage('K',this)">K</button>
     <button class="tab" onclick="showPage('L',this)">L</button>
+    <button class="tab" style="background:rgba(255,215,0,0.3);color:#FFD700" onclick="showPage('r32',this)">🏆 R32</button>
   </div>
 </div>
 
@@ -293,6 +294,7 @@ footer .ft-name{color:var(--gold);font-size:.82rem;font-weight:600;display:block
 <div id="page-G"  class="page"></div><div id="page-H"  class="page"></div>
 <div id="page-I"  class="page"></div><div id="page-J"  class="page"></div>
 <div id="page-K"  class="page"></div><div id="page-L"  class="page"></div>
+<div id="page-r32" class="page"></div>
 
 <footer>
   <span class="ft-name">🎁 A Gift for Friends &amp; Family — Prepared by Salah ALAWSY · Vancouver BC 🇮🇶🇨🇦</span>
@@ -450,7 +452,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v38';
+const CURRENT_VER = 'wc2026_v39';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -751,17 +753,122 @@ function showPage(id,btn){
 }
 function renderCurrent(){
   if(curPage==='home')renderHome();
+  else if(curPage==='r32')renderR32();
   else renderGroupPage(curPage);
 }
 
 // ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════
+// ROUND OF 32 DATA & RENDERING
+// ════════════════════════════════════════════════════════
+const R32_MATCHES = [
+  {id:'73', t1:'South Africa', t2:'Canada', ko:pt('2026-06-28',12,0), venue:'SoFi Stadium', city:'Los Angeles', g1:null,g2:null},
+  {id:'76', t1:'Brazil', t2:'Japan', ko:pt('2026-06-29',10,0), venue:'NRG Stadium', city:'Houston', g1:null,g2:null},
+  {id:'74', t1:'Germany', t2:'Paraguay', ko:pt('2026-06-29',13,30), venue:'Gillette Stadium', city:'Boston', g1:null,g2:null},
+  {id:'75', t1:'Netherlands', t2:'Morocco', ko:pt('2026-06-29',18,0), venue:'Estadio BBVA', city:'Monterrey', g1:null,g2:null},
+  {id:'78', t1:'Ivory Coast', t2:'Norway', ko:pt('2026-06-30',10,0), venue:'AT&T Stadium', city:'Dallas', g1:null,g2:null},
+  {id:'77', t1:'France', t2:'Sweden', ko:pt('2026-06-30',14,0), venue:'MetLife Stadium', city:'East Rutherford', g1:null,g2:null},
+  {id:'79', t1:'Mexico', t2:'Ecuador', ko:pt('2026-06-30',18,0), venue:'Estadio Azteca', city:'Mexico City', g1:null,g2:null},
+  {id:'80', t1:'England', t2:'DR Congo', ko:pt('2026-07-01',9,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', g1:null,g2:null},
+  {id:'82', t1:'Belgium', t2:'Senegal', ko:pt('2026-07-01',13,0), venue:'Lumen Field', city:'Seattle', g1:null,g2:null},
+  {id:'81', t1:'United States', t2:'Bosnia and Herzegovina', ko:pt('2026-07-01',17,0), venue:"Levi's Stadium", city:'Santa Clara', g1:null,g2:null},
+  {id:'84', t1:'Spain', t2:'Austria', ko:pt('2026-07-02',12,0), venue:'SoFi Stadium', city:'Los Angeles', g1:null,g2:null},
+  {id:'83', t1:'Portugal', t2:'Croatia', ko:pt('2026-07-02',16,0), venue:'BMO Field', city:'Toronto', g1:null,g2:null},
+  {id:'85', t1:'Switzerland', t2:'Algeria', ko:pt('2026-07-02',20,0), venue:'BC Place', city:'Vancouver', note:'van', g1:null,g2:null},
+  {id:'88', t1:'Australia', t2:'Egypt', ko:pt('2026-07-03',11,0), venue:'AT&T Stadium', city:'Dallas', g1:null,g2:null},
+  {id:'86', t1:'Argentina', t2:'Cape Verde', ko:pt('2026-07-03',15,0), venue:'Hard Rock Stadium', city:'Miami', g1:null,g2:null},
+  {id:'87', t1:'Colombia', t2:'Ghana', ko:pt('2026-07-03',18,30), venue:'Arrowhead Stadium', city:'Kansas City', g1:null,g2:null},
+];
+
+// Pre-load any known R32 results (updated daily)
+const r32Known = {};
+function loadR32Results(){
+  const stored = loadResults();
+  Object.entries(r32Known).forEach(([id,[g1,g2]])=>{
+    const key = 'r32_'+id;
+    if(stored[key]===undefined){ stored[key]=[g1,g2]; }
+  });
+  saveResults(stored);
+  return stored;
+}
+
+function onScoreR32(id){
+  const v1 = document.getElementById('r1_'+id).value;
+  const v2 = document.getElementById('r2_'+id).value;
+  const stored = loadResults();
+  const key = 'r32_'+id;
+  if(v1!=='' && v2!==''){
+    stored[key] = [parseInt(v1), parseInt(v2)];
+  } else {
+    delete stored[key];
+  }
+  saveResults(stored);
+}
+
+function renderR32(){
+  const stored = loadResults();
+  let html = `
+  <div class="sec-hdr">🏆 Round of 32 — Knockout Stage Begins! &nbsp;|&nbsp; ${TZ[curTZ].label}</div>
+  <div class="legend">
+    <div class="leg"><div class="leg-sq" style="background:#E8F5E9"></div>Finished</div>
+    <div class="leg"><div class="leg-sq" style="background:#FFFDE7"></div>🔴 Live</div>
+    <div class="leg"><div class="leg-sq" style="background:#E0F7FA"></div>★ Vancouver</div>
+  </div>
+  <div class="day-block">
+  <div class="day-label">⚔️ Single Elimination — Win or Go Home</div>
+  <div class="matches-list">`;
+
+  R32_MATCHES.forEach(m => {
+    const key = 'r32_'+m.id;
+    const res = stored[key];
+    const isVan = m.note === 'van';
+    let rc = res ? 'done' : (Date.now()>m.ko && Date.now()<m.ko+125*60000 ? 'live-now' : '');
+    if(isVan) rc += ' van';
+
+    const scoreHTML = res
+      ? `<div class="score-result">${res[0]} : ${res[1]}</div>`
+      : `<div class="score-inputs">
+          <input class="score-in" id="r1_${m.id}" type="number" min="0" max="99"
+            placeholder="-" oninput="onScoreR32('${m.id}')">
+          <span class="score-sep">:</span>
+          <input class="score-in" id="r2_${m.id}" type="number" min="0" max="99"
+            placeholder="-" oninput="onScoreR32('${m.id}')">
+         </div>`;
+
+    const cd = res
+      ? `<span class="cd-badge cd-done">✅ Done</span>`
+      : `<span class="cd-badge cd-soon" data-ko="${m.ko}" data-mid="${key}">⏱ ...</span>`;
+
+    const vanB = isVan ? '<span class="badge b-van">★ Vancouver</span>' : '';
+
+    html += `<div class="match-row ${rc}" id="row_${key}">
+      <div class="team1">${m.t1}</div>
+      <div class="score-center">${scoreHTML}<span style="font-size:.65rem;color:#90A4AE">${localTime(m.ko)} ${TZ[curTZ].abbr}</span></div>
+      <div class="team2">${m.t2}</div>
+      <div class="match-meta">${cd}${vanB}
+        <span style="margin-left:auto;font-size:.66rem;color:#90A4AE">${m.city}</span>
+        <span style="font-size:.66rem;color:#90A4AE">${localDate(m.ko)}</span>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>
+  <div class="tbreak">
+    ⚖️ <b>Knockout Rule:</b> If tied after 90 minutes → Extra Time (30 min) → Penalty Shootout. No more draws from here!
+  </div>`;
+
+  document.getElementById('page-r32').innerHTML = html;
+  tickCDs();
+}
+
 renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v38';
+const APP_VERSION = 'v39';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
