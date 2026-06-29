@@ -452,7 +452,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v42';
+const CURRENT_VER = 'wc2026_v43';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -871,7 +871,7 @@ function renderR32QualStatus(){
 }
 
 function renderR32(){
-  const stored = loadResults();
+  const stored = loadR32Results();
 
   // group matches by local date (same logic as renderHome)
   const byDay = {};
@@ -945,7 +945,7 @@ renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v42';
+const APP_VERSION = 'v43';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
