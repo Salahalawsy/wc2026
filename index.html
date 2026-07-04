@@ -452,7 +452,7 @@ function loadResults(){
 function saveResults(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
 
 // ── Auto-clear old cache when version changes ──
-const CURRENT_VER = 'wc2026_v49';
+const CURRENT_VER = 'wc2026_v50';
 if(localStorage.getItem('wc2026_ver') !== CURRENT_VER){
   Object.keys(localStorage).filter(k=>k.startsWith('wc2026')).forEach(k=>localStorage.removeItem(k));
   localStorage.setItem('wc2026_ver', CURRENT_VER);
@@ -783,8 +783,21 @@ const R32_MATCHES = [
   {id:'87', t1:'Colombia', t2:'Ghana', ko:pt('2026-07-03',18,30), venue:'Arrowhead Stadium', city:'Kansas City', g1:null,g2:null},
 ];
 
+// ── ROUND OF 16 MATCHES ──
+const R16_MATCHES = [
+  {id:'90', t1:'Canada', t2:'Morocco', ko:pt('2026-07-04',10,0), venue:'NRG Stadium', city:'Houston', note:'canada'},
+  {id:'89', t1:'Paraguay', t2:'France', ko:pt('2026-07-04',14,0), venue:'Lincoln Financial Field', city:'Philadelphia', note:''},
+  {id:'91', t1:'Brazil', t2:'Norway', ko:pt('2026-07-05',13,0), venue:'MetLife Stadium', city:'East Rutherford', note:''},
+  {id:'92', t1:'Mexico', t2:'England', ko:pt('2026-07-05',17,0), venue:'Estadio Azteca', city:'Mexico City', note:''},
+  {id:'93', t1:'Spain', t2:'Portugal', ko:pt('2026-07-06',12,0), venue:'AT&T Stadium', city:'Dallas', note:''},
+  {id:'94', t1:'Belgium', t2:'United States', ko:pt('2026-07-06',17,0), venue:'Lumen Field', city:'Seattle', note:''},
+  {id:'95', t1:'Argentina', t2:'Egypt', ko:pt('2026-07-07',9,0), venue:'Mercedes-Benz Stadium', city:'Atlanta', note:''},
+  {id:'96', t1:'Switzerland', t2:'Colombia', ko:pt('2026-07-07',13,0), venue:'BC Place', city:'Vancouver', note:'van'},
+];
+const r16Known = {};
+
 // Pre-load any known R32 results (updated daily)
-const r32Known = { '73':[0,1],'76':[2,1],'74':[3,4],'75':[2,3],'78':[1,2],'77':[3,0],'79':[2,0],'80':[2,1],'82':[3,2],'81':[2,0],'84':[3,0],'83':[2,1],'85':[2,0] };
+const r32Known = { '73':[0,1],'76':[2,1],'74':[3,4],'75':[2,3],'78':[1,2],'77':[3,0],'79':[2,0],'80':[2,1],'82':[3,2],'81':[2,0],'84':[3,0],'83':[2,1],'85':[2,0],'88':[2,4],'86':[3,2],'87':[1,0] };
 function loadR32Results(){
   const stored = loadResults();
   Object.entries(r32Known).forEach(([id,[g1,g2]])=>{
@@ -936,16 +949,80 @@ function renderR32(){
   </div>
   <div id="r32-qual-status"></div>`;
 
+  // ── ADD R16 SCHEDULE ──
+  html += `<div class="sec-hdr" style="margin-top:16px">🏆 Round of 16 — Next Stage Begins July 4!</div>`;
+  const r16Stored = loadResults();
+
+  const r16ByDay = {};
+  R16_MATCHES.forEach(m => {
+    const k = dateKey(m.ko), lbl = localDate(m.ko);
+    if(!r16ByDay[k]) r16ByDay[k] = {lbl, ms:[]};
+    r16ByDay[k].ms.push(m);
+  });
+
+  Object.keys(r16ByDay).sort().forEach(k => {
+    const {lbl, ms} = r16ByDay[k];
+    const done = ms.filter(m => r16Stored['r16_'+m.id]).length;
+    html += `<div class="day-block">
+    <div class="day-label">📆 ${lbl}<span class="day-count">${ms.length} match${ms.length>1?'es':''}${done?` · ${done} ✅`:''}</span></div>
+    <div class="matches-list">`;
+    ms.forEach(m => {
+      const key = 'r16_'+m.id;
+      const res = r16Stored[key];
+      const isVan = m.note === 'van', isCan = m.note === 'canada';
+      let rc = res ? 'done' : (Date.now()>m.ko && Date.now()<m.ko+125*60000 ? 'live-now' : '');
+      if(isVan) rc += ' van'; else if(isCan) rc += ' canada';
+
+      const scoreHTML = res
+        ? `<div class="score-result">${res[0]} : ${res[1]}</div>`
+        : `<div class="score-inputs">
+            <input class="score-in" id="r16a_${m.id}" type="number" min="0" max="99"
+              placeholder="-" oninput="onScoreR16('${m.id}')">
+            <span class="score-sep">:</span>
+            <input class="score-in" id="r16b_${m.id}" type="number" min="0" max="99"
+              placeholder="-" oninput="onScoreR16('${m.id}')">
+           </div>`;
+
+      const cd = res
+        ? `<span class="cd-badge cd-done">✅ Done</span>`
+        : `<span class="cd-badge cd-soon" data-ko="${m.ko}" data-mid="${key}">⏱ ...</span>`;
+
+      const vanB = isVan ? '<span class="badge b-van">★ Vancouver</span>' : '';
+      const canB = isCan ? '<span class="badge b-canada">🍁 Canada</span>' : '';
+
+      html += `<div class="match-row ${rc}">
+        <div class="team1">${m.t1}</div>
+        <div class="score-center">${scoreHTML}<span style="font-size:.65rem;color:#90A4AE">${localTime(m.ko)} ${TZ[curTZ].abbr}</span></div>
+        <div class="team2">${m.t2}</div>
+        <div class="match-meta">${cd}${vanB}${canB}
+          <span style="margin-left:auto;font-size:.66rem;color:#90A4AE">${m.city}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
   document.getElementById('page-r32').innerHTML = html;
   tickCDs();
   renderR32QualStatus();
+}
+
+function onScoreR16(id){
+  const v1 = document.getElementById('r16a_'+id).value;
+  const v2 = document.getElementById('r16b_'+id).value;
+  const stored = loadResults();
+  const key = 'r16_'+id;
+  if(v1!=='' && v2!==''){
+    stored[key] = [parseInt(v1), parseInt(v2)];
+  } else { delete stored[key]; }
+  saveResults(stored);
 }
 
 renderHome();
 tickCDs();
 
 // ── AUTO-RELOAD: checks for new version (same-origin, Safari-safe) ──
-const APP_VERSION = 'v49';
+const APP_VERSION = 'v50';
 function checkForUpdates(){
   // Same-origin fetch — works reliably in Safari (no CORS issues)
   fetch('./version.json?nocache='+Date.now(), {cache:'no-store'})
